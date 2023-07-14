@@ -14,8 +14,9 @@ class RegisterSerializer(DefaultRegisterUserSerializer):
     primary_channel = ChannelSerializer()
 
     def create(self, validated_data):
-        channel_data = validated_data.pop("primary_channel")
+        data = validated_data.copy()
+        channel_data = data.pop("primary_channel")
         channel = Channel.objects.create(**channel_data)
-        validated_data["primary_channel"] = channel
-        user = super().create(validated_data)
+        data["primary_channel"] = channel
+        user = super().create(data)
         return user
